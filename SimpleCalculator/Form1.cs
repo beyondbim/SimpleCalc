@@ -17,6 +17,8 @@ namespace SimpleCalculator
         double secondnum;
         double result;
         string Num;
+        string numarray;
+
         public Calculator()
         {
             InitializeComponent();
@@ -46,134 +48,121 @@ namespace SimpleCalculator
                 buttonEnable();
             }
         }
-        private void button0_Click(object sender, EventArgs e)
+        private void b_click(object sender, EventArgs e)
         {
-            Num = "0";
-            buttonClick(Num);
-        }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Num = "1";
-            buttonClick(Num);
-        }
-        private void button2_Click(object sender, EventArgs e)
-        {
-            Num = "2";
-            buttonClick(Num);
-        }
-        private void button3_Click(object sender, EventArgs e)
-        {
-            Num = "3";
-            buttonClick(Num);
-        }
-        private void button4_Click(object sender, EventArgs e)
-        {
-            Num = "4";
-            buttonClick(Num);
-        }
-        private void button5_Click(object sender, EventArgs e)
-        {
-            Num = "5";
-            buttonClick(Num);
-        }
-        private void button6_Click(object sender, EventArgs e)
-        {
-            Num = "6";
-            buttonClick(Num);
-        }
-        private void button7_Click(object sender, EventArgs e)
-        {
-            Num = "7";
-            buttonClick(Num);
-        }
-        private void button8_Click(object sender, EventArgs e)
-        {
-            Num = "8";
-            buttonClick(Num);
-        }
-        private void button9_Click(object sender, EventArgs e)
-        {
-            Num = "9";
-            buttonClick(Num);
-        }
-        private void buttonC_Click(object sender, EventArgs e)
-        {
-            textBoxDisplay.Text = null;
-        }
-        private void buttonEqual_Click(object sender, EventArgs e)
-        {
-            secondnum = double.Parse(textBoxDisplay.Text);
-            if (condition == "Add")
+            string b = (sender as Button).Text;
+            Num = b;
+            for (int x = 0; x < 10; x++)
             {
-                result = firstnum + secondnum;
-                textBoxDisplay.Text = result.ToString();
+                numarray = x.ToString();
+                if (numarray == Num)
+                {
+                    buttonClick(Num);
+                    break;
+                }
             }
-            else if (condition == "Sub")
+            if (Num == "C")
             {
-                result = firstnum - secondnum;
-                textBoxDisplay.Text = result.ToString();
+                textBoxDisplay.Text = null;
+                buttonEnable();
             }
-            else if (condition == "Multiply")
+            if (Num == "CE")
             {
-                result = firstnum * secondnum;
-                textBoxDisplay.Text = result.ToString();
+                textBoxDisplay.Text = null;
+                history.Text = null;
+                buttonEnable();
             }
-            else if (condition == "Divide")
+            else if (Num == ".")
             {
-                result = firstnum / secondnum;
-                textBoxDisplay.Text = result.ToString();
+                string display = textBoxDisplay.Text;
+                if (display.IndexOf('.') == -1)
+                {
+                    buttonClick(Num);
+                }
+                else
+                {
+                    MessageBox.Show(string.Format("Please check your input. The existing number {0} already has a decimal.", display), "Error Message",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
-        }
-        private void buttonAdd_Click(object sender, EventArgs e)
-        {
-            firstnum = double.Parse(textBoxDisplay.Text);
-            textBoxDisplay.Text = "0";
-            condition = "Add";
-        }
-        private void buttonSub_Click(object sender, EventArgs e)
-        {
-            firstnum = double.Parse(textBoxDisplay.Text);
-            textBoxDisplay.Text = "0";
-            condition = "Sub";
-        }
-        private void buttonMultiply_Click(object sender, EventArgs e)
-        {
-            firstnum = double.Parse(textBoxDisplay.Text);
-            textBoxDisplay.Text = "0";
-            condition = "Multiply";
-        }
-        private void buttonDivide_Click(object sender, EventArgs e)
-        {
-            firstnum = double.Parse(textBoxDisplay.Text);
-            textBoxDisplay.Text = "0";
-            condition = "Divide";
-        }
-        private void buttonDel_Click(object sender, EventArgs e)
-        {
-            string display = textBoxDisplay.Text;
-            string newString = display.Remove(display.Length - 1, 1);
-            textBoxDisplay.Text = newString;
-            buttonEnable();
-        }
-        private void buttonCE_Click(object sender, EventArgs e)
-        {
-            textBoxDisplay.Text = null;
-        }
-        private void buttonDecimal_Click(object sender, EventArgs e)
-        {
-            if (textBoxDisplay.Text == null || textBoxDisplay.Text == "0")
+            else if (Num == "+_")
             {
-                textBoxDisplay.Text = "0.";
+                string display = textBoxDisplay.Text;
+                if(display.IndexOf('-')==-1)
+                {
+                    String Sign = "-";
+                    textBoxDisplay.Text = Sign + textBoxDisplay.Text;
+                }
+                else
+                {
+                    String plus = textBoxDisplay.Text;
+                    String n = plus.Replace("-", "");
+                    textBoxDisplay.Text = n;
+                }
             }
-            else
+            else if (Num == "=")
             {
-                textBoxDisplay.Text = textBoxDisplay.Text + ".";
+                secondnum = double.Parse(textBoxDisplay.Text);
+                if (condition == "Add")
+                {
+                    history.Text = history.Text + textBoxDisplay.Text;
+                    result = firstnum + secondnum;
+                    textBoxDisplay.Text = result.ToString();
+                }
+                else if (condition == "Sub")
+                {
+                    history.Text = history.Text + textBoxDisplay.Text;
+                    result = firstnum - secondnum;
+                    textBoxDisplay.Text = result.ToString();
+                }
+                else if (condition == "Multiply")
+                {
+                    history.Text = history.Text + textBoxDisplay.Text;
+                    result = firstnum * secondnum;
+                    textBoxDisplay.Text = result.ToString();
+                }
+                else if (condition == "Divide")
+                {
+                    history.Text = history.Text + textBoxDisplay.Text;
+                    result = firstnum / secondnum;
+                    textBoxDisplay.Text = result.ToString();
+                }
             }
-            buttonEnable();
-        }
-        private void Calculator_Load(object sender, EventArgs e)
-        {
-            textBoxDisplay.Text = "0";
+            else if (Num == "+")
+            {
+                history.Text = textBoxDisplay.Text+ "+";
+                firstnum = double.Parse(textBoxDisplay.Text);
+                textBoxDisplay.Text = "0";
+                condition = "Add";
+            }
+            else if (Num == "-")
+            {
+                history.Text = textBoxDisplay.Text + "-";
+                firstnum = double.Parse(textBoxDisplay.Text);
+                textBoxDisplay.Text = "0";
+                condition = "Sub";
+            }
+            else if (Num == "X")
+            {
+                history.Text = textBoxDisplay.Text + "X";
+                firstnum = double.Parse(textBoxDisplay.Text);
+                textBoxDisplay.Text = "0";
+                condition = "Multiply";
+            }
+            else if (Num == "/")
+            {
+                history.Text = textBoxDisplay.Text + "/";
+                firstnum = double.Parse(textBoxDisplay.Text);
+                textBoxDisplay.Text = "0";
+                condition = "Divide";
+            }
+            else if (Num == "DEL")
+            {
+                string display = textBoxDisplay.Text;
+                string newString = display.Remove(display.Length - 1, 1);
+                textBoxDisplay.Text = newString;
+                buttonEnable();
+            }
         }
     }
 }
